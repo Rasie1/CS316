@@ -64,11 +64,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Expression.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="REPL.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Expression.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="REPL.h" />
   </ItemGroup>

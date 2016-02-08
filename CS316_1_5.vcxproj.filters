@@ -24,12 +24,18 @@
     <ClCompile Include="Parser.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
+    <ClCompile Include="Expression.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="REPL.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="Parser.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="Expression.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>
