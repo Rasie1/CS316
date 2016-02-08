@@ -64,15 +64,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Environment.cpp" />
     <ClCompile Include="Expression.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Operation.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="REPL.cpp" />
+    <ClCompile Include="Term.cpp" />
+    <ClCompile Include="Then.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Environment.h" />
     <ClInclude Include="Expression.h" />
+    <ClInclude Include="Operation.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="REPL.h" />
+    <ClInclude Include="Term.h" />
+    <ClInclude Include="Then.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
