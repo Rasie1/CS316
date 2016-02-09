@@ -8,7 +8,7 @@ public:
 	Expression() {}
 	~Expression() {}
 
-	virtual std::shared_ptr<Expression> eval() = 0;
+	//virtual std::shared_ptr<Expression> eval() = 0;
 	virtual std::string toString() const = 0;
 };
 

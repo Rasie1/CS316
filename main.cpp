@@ -10,7 +10,12 @@ int main()
 	{
 		std::cout << ":> ";
 		std::string input, output;
-		std::cin >> input;
+
+		char line[256];
+		
+		std::cin.getline(line, 256);
+
+		input = std::string(line);
 
 		repl.process(input, output, shouldContinue);
 		

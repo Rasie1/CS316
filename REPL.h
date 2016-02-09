@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "Parser.h"
 
 class REPL
 {
@@ -13,5 +14,6 @@ public:
 	~REPL();
 
 private:
+	Parser parser;
 };
 

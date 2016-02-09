@@ -1,5 +1,6 @@
 #include "Then.h"
 #include "Term.h"
+#include <numeric>
 
 std::string Then::label = "=>";
 
@@ -9,8 +10,8 @@ std::string Then::toString() const
 	
 	std::string ret = args[0]->toString() + " " + label;
 
-	for (auto i = std::next(std::begin(args)); i != std::end(args); ++i)
-		ret += " " + (*i)->toString();
-
-	return ret;
+	return std::accumulate(
+		std::next(std::begin(args)),
+		std::end(args), args[0]->toString() + " " + label,
+		[](const std::string& acc, const std::shared_ptr<Term>& x){ return acc + " " + x->toString(); });
 }

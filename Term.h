@@ -9,7 +9,7 @@ public:
 	Term(const std::string& name) :
 		name(name) {}
 
-	virtual std::string toString();
+	virtual std::string toString() const override;
 
 private:
 	std::string name;

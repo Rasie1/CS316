@@ -1,6 +1,6 @@
 #include "Term.h"
 
-std::string Term::toString()
+std::string Term::toString() const
 {
 	return name;
 }

@@ -64,8 +64,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Check.cpp" />
     <ClCompile Include="Environment.cpp" />
     <ClCompile Include="Expression.cpp" />
+    <ClCompile Include="Fact.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Operation.cpp" />
     <ClCompile Include="Parser.cpp" />
@@ -74,8 +76,10 @@
     <ClCompile Include="Then.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Check.h" />
     <ClInclude Include="Environment.h" />
     <ClInclude Include="Expression.h" />
+    <ClInclude Include="Fact.h" />
     <ClInclude Include="Operation.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="REPL.h" />
