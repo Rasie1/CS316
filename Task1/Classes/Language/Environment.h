@@ -15,6 +15,8 @@ public:
     bool check(const std::string& term);
 
 private:
+    void fillWithTrue(const std::string& term);
+
     std::set<std::string> truth;
     std::map<std::string, std::set<std::string>> links;
 };
