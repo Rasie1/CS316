@@ -60,10 +60,11 @@ std::shared_ptr<Expression> Parser::parse(const std::string& input)
     // case for "Check"
     else
     {
-        size_t p = input.find(Check::label);
-        if (p != input.npos)
+        auto tokens = tokenize(input);
+
+        if (tokens.size() == 1)
         {
-            return std::make_shared<Check>(std::vector<std::shared_ptr<Term>>());
+            return std::make_shared<Check>(std::make_shared<Term>(tokens[0]));
         }
         else if (input == "help")
         {

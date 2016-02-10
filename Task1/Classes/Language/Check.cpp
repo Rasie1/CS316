@@ -6,18 +6,21 @@
 
 const std::string Check::label = "?";
 
+Check::Check(const std::shared_ptr<Term>& term) :
+    Operation({term})
+{
+}
+
 std::string Check::toString() const
 {
-    //todo
-    throw 0;
-    return label;
+    return arguments[0]->toString() + "?";
 }
 
 std::shared_ptr<Expression> Check::eval(Environment& env)
 {
-    bool ret = true;
+    bool ret = false;
 
-    for (auto i = std::next(std::begin(arguments)); i != std::end(arguments); ++i)
+    for (auto i = std::begin(arguments); i != std::end(arguments); ++i)
     {
         ret = ret || env.check((*i)->name);
     }
