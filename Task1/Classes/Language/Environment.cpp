@@ -7,10 +7,10 @@ void Environment::fact(const std::string& term)
 
 void Environment::fillWithTrue(const std::string& term)
 {
-    if (check(term))
-        for (auto &x : links[term])
-            if (!check(x))
-                fillWithTrue(x);
+    fact(term);
+    for (auto &x : links[term])
+        if (!check(x))
+            fillWithTrue(x);
 }
 
 void Environment::then(const std::string& from, const std::string& to)
