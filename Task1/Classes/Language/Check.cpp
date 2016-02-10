@@ -1,5 +1,8 @@
 #include "Check.h"
 #include "Unit.h"
+#include "Term.h"
+#include "Environment.h"
+#include "Boolean.h"
 
 const std::string Check::label = "?";
 
@@ -12,5 +15,12 @@ std::string Check::toString() const
 
 std::shared_ptr<Expression> Check::eval(Environment& env)
 {
-    return std::make_shared<Unit>();
+    bool ret = true;
+
+    for (auto i = std::next(std::begin(arguments)); i != std::end(arguments); ++i)
+    {
+        ret = ret || env.check((*i)->name);
+    }
+    return std::make_shared<Boolean>(ret);
+
 }
