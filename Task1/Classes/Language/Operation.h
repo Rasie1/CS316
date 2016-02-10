@@ -4,15 +4,12 @@
 
 class Term;
 class Operation :
-	public Expression
+    public Expression
 {
 public:
-	Operation(const std::vector<std::shared_ptr<Term>>& arguments) :
-		arguments(arguments) {}
+    Operation(const std::vector<std::shared_ptr<Term>>& arguments) :
+        arguments(arguments) {}
 
-	std::vector<std::shared_ptr<Term>> getArguments() const;
-
-private:
-	std::vector<std::shared_ptr<Term>> arguments;
+    const std::vector<std::shared_ptr<Term>> arguments;
 };
 

@@ -7,10 +7,9 @@ const std::string Fact::label = "=>";
 
 std::string Fact::toString() const
 {
-    auto args = getArguments();
     return std::accumulate(
-        std::begin(args),
-        std::end(args), label,
+        std::begin(arguments),
+        std::end(arguments), label,
         [](const std::string& acc, const std::shared_ptr<Term>& x){ return acc + " " + x->toString(); });
 }
 

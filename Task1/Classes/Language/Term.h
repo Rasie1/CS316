@@ -11,7 +11,8 @@ public:
 
     virtual std::string toString() const override;
 
+    const std::string name;
+
 private:
-    std::string name;
 };
 

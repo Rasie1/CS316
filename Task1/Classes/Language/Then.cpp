@@ -8,17 +8,19 @@ std::string Then::label = "=>";
 
 std::string Then::toString() const
 {
-    auto args = this->getArguments();
-
-    std::string ret = args[0]->toString() + " " + label;
+    std::string ret = arguments[0]->toString() + " " + label;
 
     return std::accumulate(
-        std::next(std::begin(args)),
-        std::end(args), args[0]->toString() + " " + label,
+        std::next(std::begin(arguments)),
+        std::end(arguments), arguments[0]->toString() + " " + label,
         [](const std::string& acc, const std::shared_ptr<Term>& x){ return acc + " " + x->toString(); });
 }
 
 std::shared_ptr<Expression> Then::eval(Environment& env)
 {
+    for (auto i = std::next(std::begin(arguments)); i != std::end(arguments); ++i)
+    {
+        env.then((*std::begin(arguments))->name, (*i)->name);
+    }
     return std::make_shared<Unit>();
 }
