@@ -2,13 +2,14 @@
 #include <memory>
 #include <string>
 
-class Expression //: public std::enable_shared_from_this<Expression>
+class Environment;
+
+class Expression
 {
 public:
-	Expression() {}
-	~Expression() {}
+    Expression() {}
 
-	//virtual std::shared_ptr<Expression> eval() = 0;
-	virtual std::string toString() const = 0;
+    virtual std::shared_ptr<Expression> eval(Environment& env) = 0;
+    virtual std::string toString() const = 0;
 };
 

@@ -4,22 +4,22 @@
 
 int main()
 {
-	REPL repl;
-	bool shouldContinue = true;
-	while (shouldContinue)
-	{
-		std::cout << ":> ";
-		std::string input, output;
+    REPL repl;
 
-		char line[256];
-		
-		std::cin.getline(line, 256);
+    bool shouldContinue = true;
+    while (shouldContinue)
+    {
+        std::cout << ":> ";
+        std::string input, output;
 
-		input = std::string(line);
+        char line[256];
+        std::cin.getline(line, 256);
+        input = std::string(line);
 
-		repl.process(input, output, shouldContinue);
-		
-		std::cout << output << std::endl;
-	}
-	return 0;
+        repl.process(input, output, shouldContinue);
+
+        std::cout << output << std::endl;
+    }
+
+    return 0;
 }

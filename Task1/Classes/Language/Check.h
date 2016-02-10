@@ -2,13 +2,15 @@
 #include "Operation.h"
 
 class Check :
-	public Operation
+    public Operation
 {
 public:
-	Check(const std::vector<std::shared_ptr<Term>>& arguments) :
-		Operation(arguments) {}
+    Check(const std::vector<std::shared_ptr<Term>>& arguments) :
+        Operation(arguments) {}
 
-	static const std::string label;
-	std::string toString() const override;
+    std::shared_ptr<Expression> eval(Environment& env) override;
+
+    static const std::string label;
+    std::string toString() const override;
 };
 

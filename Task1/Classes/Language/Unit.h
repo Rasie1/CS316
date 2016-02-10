@@ -1,17 +1,12 @@
 #pragma once
 #include "DataType.h"
-#include <string>
 
-class Term :
+class Unit :
     public DataType
 {
 public:
-    Term(const std::string& name) :
-        name(name) {}
+    Unit() {}
 
     virtual std::string toString() const override;
-
-private:
-    std::string name;
 };
 

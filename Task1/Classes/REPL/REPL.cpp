@@ -6,13 +6,13 @@ REPL::REPL()
 {
 }
 
-void REPL::process(const std::string& input, 
-				   std::string& output,
-				   bool& shouldContinue)
+void REPL::process(const std::string& input,
+                   std::string& output,
+                   bool& shouldContinue)
 {
-	auto result = parser.parse(input);
+    auto result = parser.parse(input);
 
-	output = result->toString();
+    output = result->eval(env)->toString();
 }
 
 REPL::~REPL()
