@@ -16,6 +16,7 @@ public:
     bool check(const std::string& term);
 
 private:
+    std::set<std::string> used;
     std::set<std::string> truth;
     std::map<std::string, std::set<std::set<std::string>>> links;
 };
