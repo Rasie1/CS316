@@ -1,7 +1,7 @@
 #include "Parser.h"
 #include "Expression.h"
 #include "Term.h"
-#include "Then.h"
+#include "Rule.h"
 #include "Fact.h"
 #include "Check.h"
 #include <sstream>
@@ -18,14 +18,14 @@ std::vector<std::string> tokenize(const std::string& input)
 
 std::shared_ptr<Expression> Parser::parse(const std::string& input)
 {
-    size_t p = input.find(Then::label);
-    // case for "Then" and "Fact"
+    size_t p = input.find(Rule::label);
+    // case for "Rule" and "Fact"
     if (p != input.npos)
     {
         auto beforeLabel = input.substr(0, p);
         auto afterLabel = input.substr(
-            p + Then::label.size(),
-            p + Then::label.size() - input.size());
+            p + Rule::label.size(),
+            p + Rule::label.size() - input.size());
 
         auto tokensBefore = tokenize(beforeLabel);
 
@@ -43,19 +43,19 @@ std::shared_ptr<Expression> Parser::parse(const std::string& input)
         if (tokensBefore.size() != 1)
             throw 0;
 
-        // case for "Then"
+        // case for "Rule"
 
         auto tokensAfter = tokenize(afterLabel);
 
-        std::vector<std::shared_ptr<Term>> argumentToThen;
-        argumentToThen.push_back(std::make_shared<Term>(tokensBefore[0]));
+        std::vector<std::shared_ptr<Term>> argumentToRule;
+        argumentToRule.push_back(std::make_shared<Term>(tokensBefore[0]));
         std::transform(
             std::begin(tokensAfter),
             std::end(tokensAfter),
-            std::back_inserter(argumentToThen),
+            std::back_inserter(argumentToRule),
             [](const std::string& token){ return std::make_shared<Term>(token); });
 
-        return std::make_shared<Then>(std::vector<std::shared_ptr<Term>>(argumentToThen));
+        return std::make_shared<Rule>(std::vector<std::shared_ptr<Term>>(argumentToRule));
     }
     // case for "Check"
     else

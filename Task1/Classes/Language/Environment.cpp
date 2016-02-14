@@ -5,23 +5,31 @@ void Environment::fact(const std::string& term)
     truth.insert(term);
 }
 
-void Environment::fillWithTrue(const std::string& term)
-{
-    fact(term);
-    for (auto &x : links[term])
-        if (!check(x))
-            fillWithTrue(x);
-}
 
-void Environment::then(const std::string& from, const std::string& to)
+void Environment::rule(const std::set<std::string>& from, const std::string& to)
 {
-    if (check(from))
-        fillWithTrue(to);
-
-    links[from].insert(to);
+    links[to].insert(from);
 }
 
 bool Environment::check(const std::string& term)
 {
-    return truth.find(term) != std::end(truth);
+    if (truth.find(term) != truth.end())
+        return true;
+    for (auto &conj : links[term])
+    {
+        if (conj.size() == 0)
+            continue;
+        bool isTermTrue = true;
+        for (auto &x : conj)
+        {
+            if (!check(x))
+            {
+                isTermTrue = false;
+                break;
+            }
+        }
+        if (isTermTrue)
+            return true;
+    }
+    return false;
 }
