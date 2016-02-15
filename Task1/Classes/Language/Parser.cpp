@@ -5,6 +5,7 @@
 #include "Fact.h"
 #include "Check.h"
 #include "HelpMessage.h"
+#include "FromFile.h"
 #include <sstream>
 #include <iterator>
 #include <algorithm>
@@ -48,6 +49,19 @@ std::shared_ptr<Expression> Parser::parse(const std::string& input)
             [](const std::string& token){ return std::make_shared<Term>(token); });
 
         return std::make_shared<Rule>(std::vector<std::shared_ptr<Term>>(argumentToRule));
+    }
+    // case for "fromFile"
+    p = input.find(FromFile::label);
+    if (p != input.npos)
+    {
+        auto afterLabel = input.substr(
+            p + FromFile::label.size(),
+            p + FromFile::label.size() - input.size());
+        auto tokens = tokenize(afterLabel);
+        if (tokens.size() != 1)
+            throw std::logic_error(parseErrorMsg);
+
+        return std::make_shared<FromFile>(std::make_shared<Term>(tokens[0]));
     }
     p = input.find(Check::label);
     // case for "Check"
