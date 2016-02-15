@@ -13,7 +13,7 @@ Check::Check(const std::shared_ptr<Term>& term) :
 
 std::string Check::toString() const
 {
-    return arguments[0]->toString() + "?";
+    return arguments[0]->toString() + label;
 }
 
 std::shared_ptr<Expression> Check::eval(Environment& env)

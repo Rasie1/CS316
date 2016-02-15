@@ -16,9 +16,16 @@ int main()
         std::cin.getline(line, 256);
         input = std::string(line);
 
-        repl.process(input, output, shouldContinue);
+        try
+        {
+            repl.process(input, output, shouldContinue);
+            std::cout << output << std::endl;
+        }
+        catch (const std::logic_error& e)
+        {
+            std::cout << e.what() << std::endl;
+        }
 
-        std::cout << output << std::endl;
     }
 
     return 0;

@@ -4,9 +4,12 @@
 #include "Rule.h"
 #include "Fact.h"
 #include "Check.h"
+#include "HelpMessage.h"
 #include <sstream>
 #include <iterator>
 #include <algorithm>
+
+const std::string parseErrorMsg = "Couldn't parse input";
 
 std::vector<std::string> tokenize(const std::string& input)
 {
@@ -18,8 +21,11 @@ std::vector<std::string> tokenize(const std::string& input)
 
 std::shared_ptr<Expression> Parser::parse(const std::string& input)
 {
+    // Help msg
+    if (input == HelpMessage::label)
+        return std::make_shared<HelpMessage>();
+    // Case for "Rule"
     size_t p = input.find(Rule::label);
-    // case for "Rule" and "Fact"
     if (p != input.npos)
     {
         auto beforeLabel = input.substr(0, p);
@@ -28,24 +34,10 @@ std::shared_ptr<Expression> Parser::parse(const std::string& input)
             p + Rule::label.size() - input.size());
 
         auto tokensBefore = tokenize(beforeLabel);
-
-        // case for "Fact"
-        if (tokensBefore.size() == 0)
-        {
-            auto tokensAfter = tokenize(afterLabel);
-            if (tokensAfter.size() != 1)
-                throw 1;
-
-            return std::make_shared<Fact>(
-                std::vector<std::shared_ptr<Term>>{ std::make_shared<Term>(tokensAfter[0]) });
-        }
-
-        if (tokensBefore.size() != 1)
-            throw 0;
-
-        // case for "Rule"
-
         auto tokensAfter = tokenize(afterLabel);
+
+        if (tokensAfter.size() == 0 || tokensBefore.size() != 1)
+            throw std::logic_error(parseErrorMsg);
 
         std::vector<std::shared_ptr<Term>> argumentToRule;
         argumentToRule.push_back(std::make_shared<Term>(tokensBefore[0]));
@@ -57,23 +49,27 @@ std::shared_ptr<Expression> Parser::parse(const std::string& input)
 
         return std::make_shared<Rule>(std::vector<std::shared_ptr<Term>>(argumentToRule));
     }
+    p = input.find(Check::label);
     // case for "Check"
+    if (p != input.npos)
+    {
+
+        auto beforeLabel = input.substr(0, p);
+        auto tokens = tokenize(beforeLabel);
+
+        if (tokens.size() == 1)
+            return std::make_shared<Check>(std::make_shared<Term>(tokens[0]));
+        else
+            throw std::logic_error(parseErrorMsg);
+    }
+    // case for "Fact"
     else
     {
         auto tokens = tokenize(input);
 
         if (tokens.size() == 1)
-        {
-            return std::make_shared<Check>(std::make_shared<Term>(tokens[0]));
-        }
-        else if (input == "help")
-        {
-            return nullptr;
-        }
+            return std::make_shared<Fact>(std::make_shared<Term>(tokens[0]));
         else
-        {
-            throw std::logic_error("Couln't parse input");
-            return nullptr;
-        }
+            throw std::logic_error(parseErrorMsg);
     }
 }
