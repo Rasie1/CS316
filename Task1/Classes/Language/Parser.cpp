@@ -38,7 +38,7 @@ std::shared_ptr<Expression> Parser::parse(const std::string& input)
         auto tokensAfter = tokenize(afterLabel);
 
         if (tokensAfter.size() == 0 || tokensBefore.size() != 1)
-            throw std::logic_error(parseErrorMsg);
+            throw std::logic_error(parseErrorMsg + "(" + input + ")");
 
         std::vector<std::shared_ptr<Term>> argumentToRule;
         argumentToRule.push_back(std::make_shared<Term>(tokensBefore[0]));
@@ -59,7 +59,7 @@ std::shared_ptr<Expression> Parser::parse(const std::string& input)
             p + FromFile::label.size() - input.size());
         auto tokens = tokenize(afterLabel);
         if (tokens.size() != 1)
-            throw std::logic_error(parseErrorMsg);
+            throw std::logic_error(parseErrorMsg + "(" + input + ")");
 
         return std::make_shared<FromFile>(std::make_shared<Term>(tokens[0]));
     }
@@ -74,7 +74,7 @@ std::shared_ptr<Expression> Parser::parse(const std::string& input)
         if (tokens.size() == 1)
             return std::make_shared<Check>(std::make_shared<Term>(tokens[0]));
         else
-            throw std::logic_error(parseErrorMsg);
+            throw std::logic_error(parseErrorMsg + "(" + input + ")");
     }
     // case for "Fact"
     else
@@ -84,6 +84,6 @@ std::shared_ptr<Expression> Parser::parse(const std::string& input)
         if (tokens.size() == 1)
             return std::make_shared<Fact>(std::make_shared<Term>(tokens[0]));
         else
-            throw std::logic_error(parseErrorMsg);
+            throw std::logic_error(parseErrorMsg + "(" + input + ")");
     }
 }
