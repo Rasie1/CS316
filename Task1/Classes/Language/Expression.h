@@ -8,6 +8,7 @@ class Expression
 {
 public:
     Expression() {}
+    virtual ~Expression();
 
     virtual std::shared_ptr<Expression> eval(Environment& env) = 0;
     virtual std::string toString() const = 0;

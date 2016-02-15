@@ -67,7 +67,6 @@ std::shared_ptr<Expression> Parser::parse(const std::string& input)
     // case for "Check"
     if (p != input.npos)
     {
-
         auto beforeLabel = input.substr(0, p);
         auto tokens = tokenize(beforeLabel);
 
