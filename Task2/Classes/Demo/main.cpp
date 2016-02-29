@@ -11,7 +11,25 @@ int main()
     cout << a << endl;
 
     cout << "Resizing with default value:" << endl;
-    a.resize(6, 6, 1000);
+    a.resize(10, 10, 1000);
     cout << a << endl;
+
+    cout << "Resizing into smaller matrix:" << endl;
+    a.resize(8, 5);
+    cout << a << endl;
+
+    cout << "Getting a row:" << endl;
+//    a.resize(6, 6, 1000);
+//    cout << a << endl;
+
+    cout << "Getting a column:" << endl;
+//    a.resize(6, 6, 1000);
+//    cout << a << endl;
+
+    cout << "Inserting a row and a column" << endl;
+    a.insertRow(3, 2);
+    a.insertCol(2, 1);
+    cout << a << endl;
+
     return 0;
 }

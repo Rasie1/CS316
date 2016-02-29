@@ -25,12 +25,15 @@ public:
     void resize(size_t rows, size_t cols, const T& value = T());
 
     template<typename ForwardIt>
-    void insertCol(ForwardIt begin, ForwardIt end);
+    void insertCol(size_t pos, ForwardIt begin, ForwardIt end) throw(std::out_of_range());
     template<typename ForwardIt>
-    void insertRow(ForwardIt begin, ForwardIt end);
+    void insertRow(size_t pos, ForwardIt begin, ForwardIt end) throw(std::out_of_range());
 
-    void deleteRow(size_t n);
-    void deleteCol(size_t n);
+    void insertCol(size_t pos, const T& value = T()) throw(std::out_of_range());
+    void insertRow(size_t pos, const T& value = T()) throw(std::out_of_range());
+
+    void deleteRow(size_t pos) throw(std::out_of_range());
+    void deleteCol(size_t pos) throw(std::out_of_range());
 
 private:
     size_t nRows, nCols;
