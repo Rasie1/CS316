@@ -1,5 +1,7 @@
 #pragma once
 #include <stdexcept>
+#include <iostream>
+#include <iomanip>
 
 template<typename T>
 class Matrix
@@ -15,8 +17,6 @@ public:
 
     T  operator()(size_t x, size_t y) const throw(std::out_of_range());
     T& operator()(size_t x, size_t y)       throw(std::out_of_range());
-
-
 
     size_t rows() const;
     size_t cols() const;
@@ -37,5 +37,19 @@ private:
 
     T *data;
 };
+
+template<typename T, int width = 8>
+std::ostream& operator<<(std::ostream& stream, const Matrix<T>& m)
+{
+    for (size_t y = 0; y < m.rows(); ++y)
+    {
+        for (size_t x = 0; x < m.cols(); ++x)
+            stream << std::setw(width) << std::to_string(m(x, y));
+
+        stream << std::endl;
+    }
+
+    return stream;
+}
 
 #include "Matrix_Impl.h"

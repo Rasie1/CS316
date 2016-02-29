@@ -67,7 +67,7 @@ static inline size_t indexFromCoordinates(size_t x,
 template<typename T>
 T Matrix<T>::operator()(size_t x, size_t y) const throw(std::out_of_range())
 {
-    return operator()(x, y);
+    return data[indexFromCoordinates(x,y, rows(), cols())];
 }
 
 template<typename T>
@@ -81,12 +81,12 @@ void Matrix<T>::resize(size_t rows, size_t cols, const T& value)
 {
     auto newData = new T[rows * cols];
 
+    std::fill(newData, newData + rows * cols, value);
+
     // fill with default
-    for (int y = 0; y < nRows; ++y)
-    for (int x = 0; x < nCols; ++x)
-    {
-        operator () (x, y) = value;
-    }
+    for (size_t y = 0; y < nRows; ++y)
+    for (size_t x = 0; x < nCols; ++x)
+        newData[indexFromCoordinates(x, y, rows, cols)] = operator()(x, y);
 
     delete[] data;
 
