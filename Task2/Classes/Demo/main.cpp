@@ -31,5 +31,10 @@ int main()
     a.insertCol(2, 1);
     cout << a << endl;
 
+    cout << "Deleting a row and a column" << endl;
+    a.deleteRow(3);
+    a.deleteCol(2);
+    cout << a << endl;
+
     return 0;
 }

@@ -114,17 +114,36 @@ template<typename T>
 template<typename ForwardIt>
 void Matrix<T>::insertRow(size_t pos, ForwardIt begin, ForwardIt end) throw(std::out_of_range())
 {
-
 }
+
 
 template<typename T>
 void Matrix<T>::deleteRow(size_t pos) throw(std::out_of_range())
 {
+    if (pos >= rows())
+        throw std::out_of_range("You're out of matrix size bounds");
 
+    for (size_t y = pos; y < rows() - 1; ++y)
+    for (size_t x = 0;   x < cols(); ++x)
+    {
+        operator()(x, y) = operator()(x, y + 1);
+    }
+
+    resize(rows() - 1, cols());
 }
+
 
 template<typename T>
 void Matrix<T>::deleteCol(size_t pos) throw(std::out_of_range())
 {
+    if (pos >= cols())
+        throw std::out_of_range("You're out of matrix size bounds");
 
+    for (size_t y = 0;   y < rows(); ++y)
+    for (size_t x = pos; x < cols() - 1; ++x)
+    {
+        operator()(x, y) = operator()(x + 1, y);
+    }
+
+    resize(rows(), cols() - 1);
 }
