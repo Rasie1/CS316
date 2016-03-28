@@ -36,5 +36,6 @@ int main()
     a.deleteCol(2);
     cout << a << endl;
 
+
     return 0;
 }
