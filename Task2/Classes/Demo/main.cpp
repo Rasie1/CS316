@@ -27,7 +27,10 @@ int main()
 //    cout << a << endl;
 
     cout << "Copying to B" << endl;
-    auto b = a;
+//    auto b = a;
+    Matrix<int> b(4, 4);
+    b(1, 1) = 1;
+    cout << b << endl;
 
     cout << "Inserting a row and a column" << endl;
     a.insertRow(3, 2);

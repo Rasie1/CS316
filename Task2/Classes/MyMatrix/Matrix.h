@@ -366,6 +366,7 @@ private:
 
     T *data;
     bool copied;
+    bool givenAwayRef;
 };
 
 template<typename T, int width = 8>
