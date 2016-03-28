@@ -297,26 +297,26 @@ public:
     };
 
 
-
-
     Matrix(size_t rows, size_t cols);
 
-    Matrix(const Matrix&) = default;
-    Matrix(Matrix&&) = default;
-    Matrix& operator=(const Matrix&) & = default;
-    Matrix& operator=(Matrix&&) & = default;
-    virtual ~Matrix() { }
+    Matrix(const Matrix&);
+    Matrix(Matrix&&);
+    Matrix& operator=(const Matrix&);
+    Matrix& operator=(Matrix&&) &;
+    virtual ~Matrix();
 
     T  operator()(size_t x, size_t y) const throw(std::out_of_range());
     T& operator()(size_t x, size_t y)       throw(std::out_of_range());
 
     iterator begin()
     {
+        detach();
         return iterator(data, 0, nRows, nCols);
     }
 
     iterator end()
     {
+        detach();
         return iterator();
     }
 
@@ -349,24 +349,19 @@ public:
     void deleteRow(size_t pos) throw(std::out_of_range());
     void deleteCol(size_t pos) throw(std::out_of_range());
 
-private:
-    void detach()
+    friend void swap(Matrix<T, A>& first, Matrix<T, A>& second)
     {
-        if (copied)
-        {
-            data = new Matrix<T>(*this);
-            copied = false;
-        }
-    }
-//    void detach()
-//    {
-//        T* tmp = *data;
-//        if(!(tmp == 0 || m_sp.unique()))
-//        {
-//            p = new Matrix(*tmp);
-//        }
-//    }
+        using std::swap;
 
+        swap(first.data, second.data);
+        swap(first.nCols, second.nCols);
+        swap(first.nRows, second.nRows);
+        swap(first.copis, second.copied);
+    }
+
+
+private:
+    void detach();
     size_t nRows, nCols;
 
     bool copied;

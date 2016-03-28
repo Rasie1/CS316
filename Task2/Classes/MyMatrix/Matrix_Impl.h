@@ -3,7 +3,8 @@
 template<typename T, class A>
 Matrix<T, A>::Matrix(size_t rows, size_t cols) :
         nRows(rows),
-        nCols(cols)
+        nCols(cols),
+        copied(false)
 {
     data = new T[rows * cols];
 }
@@ -47,12 +48,14 @@ T Matrix<T, A>::operator()(size_t x, size_t y) const throw(std::out_of_range())
 template<typename T, class A>
 T& Matrix<T, A>::operator()(size_t x, size_t y) throw(std::out_of_range())
 {
+    detach();
     return data[indexFromCoordinates(x,y, rows(), cols())];
 }
 
 template<typename T, class A>
 void Matrix<T, A>::resize(size_t rows, size_t cols, const T& value)
 {
+    detach();
     auto newData = new T[rows * cols];
 
     std::fill(newData, newData + rows * cols, value);
@@ -72,6 +75,7 @@ void Matrix<T, A>::resize(size_t rows, size_t cols, const T& value)
 template<typename T, class A>
 void Matrix<T, A>::insertCol(size_t pos, const T& value) throw(std::out_of_range())
 {
+    detach();
     if (pos > cols())
         throw std::out_of_range("You're out of matrix size bounds");
 
@@ -89,6 +93,7 @@ void Matrix<T, A>::insertCol(size_t pos, const T& value) throw(std::out_of_range
 template<typename T, class A>
 void Matrix<T, A>::insertRow(size_t pos, const T& value) throw(std::out_of_range())
 {
+    detach();
     if (pos > rows())
         throw std::out_of_range("You're out of matrix size bounds");
 
@@ -107,6 +112,7 @@ template<typename T, class A>
 template<typename ForwardIt>
 void Matrix<T, A>::insertCol(size_t pos, ForwardIt begin, ForwardIt end) throw(std::out_of_range())
 {
+    detach();
 
 }
 
@@ -114,12 +120,14 @@ template<typename T, class A>
 template<typename ForwardIt>
 void Matrix<T, A>::insertRow(size_t pos, ForwardIt begin, ForwardIt end) throw(std::out_of_range())
 {
+    detach();
 }
 
 
 template<typename T, class A>
 void Matrix<T, A>::deleteRow(size_t pos) throw(std::out_of_range())
 {
+    detach();
     if (pos >= rows())
         throw std::out_of_range("You're out of matrix size bounds");
 
@@ -136,6 +144,7 @@ void Matrix<T, A>::deleteRow(size_t pos) throw(std::out_of_range())
 template<typename T, class A>
 void Matrix<T, A>::deleteCol(size_t pos) throw(std::out_of_range())
 {
+    detach();
     if (pos >= cols())
         throw std::out_of_range("You're out of matrix size bounds");
 
@@ -146,4 +155,60 @@ void Matrix<T, A>::deleteCol(size_t pos) throw(std::out_of_range())
     }
 
     resize(rows(), cols() - 1);
+}
+
+template<typename T, class A>
+Matrix<T, A>::~Matrix()
+{
+    delete[] data;
+}
+
+
+template<typename T, class A>
+Matrix<T, A>::Matrix(const Matrix& other) :
+    data(other.data),
+    nRows(other.nRows),
+    nCols(other.nCols),
+    copied(true)
+{
+
+}
+
+template<typename T, class A>
+Matrix<T, A>::Matrix(Matrix&& other) :
+    data(other.data),
+    nRows(other.nRows),
+    nCols(other.nCols),
+    copied(true)
+{
+
+}
+
+template<typename T, class A>
+Matrix<T, A>& Matrix<T, A>::operator=(const Matrix& other)
+{
+    swap(*this, other);
+
+    return *this;
+}
+
+template<typename T, class A>
+Matrix<T, A>& Matrix<T, A>::operator=(Matrix&& other) &
+{
+    swap(*this, other);
+
+    return *this;
+}
+
+template<typename T, class A>
+void Matrix<T, A>::detach()
+{
+    if (copied)
+    {
+        auto newdata = new T[nRows * nCols];
+        std::copy(data, data + nRows*nCols, newdata);
+        data = newdata;
+        copied = false;
+    }
+
 }
