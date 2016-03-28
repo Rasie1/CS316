@@ -139,10 +139,6 @@ public:
             return innerIterator(p, position, rowSize);
         }
 
-//        vector<int> v;
-//        for (vi::iterator it = bbegin))
-//        for (int x: v)
-
         innerIterator begin()
         {
             return innerIterator(p, 0, rowSize);
@@ -159,7 +155,146 @@ public:
         int rowSize;
     };
 
+    class const_iterator
+    {
+    public:
+        typedef typename A::difference_type difference_type;
+        typedef typename A::value_type value_type;
+        typedef typename A::reference reference;
+        typedef typename A::pointer pointer;
 
+        class const_innerIterator
+        {
+        public:
+            const_innerIterator() :
+                p(nullptr),
+                position(0),
+                endPosition(0)
+            {
+            }
+
+            const_innerIterator(const T* p, int position, int endPosition) :
+                p(p),
+                position(position),
+                endPosition(endPosition)
+            {
+            }
+
+            const_innerIterator(const const_innerIterator& other) :
+                p(other.p),
+                position(other.position),
+                endPosition(other.endPosition)
+            {
+            }
+
+
+            const_innerIterator& operator=(const const_innerIterator& other)
+            {
+                this->p = other.p;
+            }
+
+            bool operator==(const const_innerIterator& other) const
+            {
+                if (p == other.p)
+                    return true;
+                if (endPosition == position || p == nullptr)
+                    return other.p == nullptr || other.endPosition == other.position;
+                return false;
+            }
+
+            bool operator!=(const const_innerIterator& other) const
+            {
+                return !(operator==(other));
+            }
+
+            const_innerIterator& operator++()
+            {
+                p++;
+                position++;
+                return *this;
+            }
+
+            const T& operator*() const
+            {
+                return *p;
+            }
+
+            const T* p;
+            int position;
+            int endPosition;
+        };
+
+        const_iterator() :
+            p(nullptr),
+            position(0),
+            endPosition(0),
+            rowSize(0)
+        {
+        }
+
+        const_iterator(T* p, int position, int endPosition, int rowSize) :
+            p(p),
+            position(position),
+            endPosition(endPosition),
+            rowSize(rowSize)
+        {
+        }
+
+        const_iterator(const const_iterator& other) :
+            p(other.p),
+            position(other.position),
+            endPosition(other.endPosition),
+            rowSize(other.rowSize)
+        {
+        }
+
+
+        const_iterator& operator=(const const_iterator& other)
+        {
+            this->p = other.p;
+        }
+
+        bool operator==(const const_iterator& other) const
+        {
+            if (p == other.p)
+                return true;
+            if (endPosition == position || p == nullptr)
+                return other.p == nullptr || other.endPosition == other.position;
+            return false;
+        }
+
+        bool operator!=(const const_iterator& other) const
+        {
+            return !(operator==(other));
+        }
+
+        const_iterator& operator++()
+        {
+            p += rowSize;
+            position++;
+            return *this;
+        }
+
+        const_innerIterator operator*() const
+        {
+            return const_innerIterator(p, position, rowSize);
+        }
+
+        const_innerIterator begin() const
+        {
+            return const_innerIterator(p, 0, rowSize);
+        }
+
+        const_innerIterator end() const
+        {
+            return const_innerIterator();
+        }
+
+        const T* p;
+        int position;
+        int endPosition;
+        int rowSize;
+    };
 
 
 
@@ -175,9 +310,6 @@ public:
     T  operator()(size_t x, size_t y) const throw(std::out_of_range());
     T& operator()(size_t x, size_t y)       throw(std::out_of_range());
 
-//    bool operator==(const T&) const;
-//    bool operator!=(const T&) const;
-
     iterator begin()
     {
         return iterator(data, 0, nRows, nCols);
@@ -188,15 +320,15 @@ public:
         return iterator();
     }
 
-//    const_iterator cbegin()
-//    {
-//        return const_iterator(data, 0, nRows, nCols);
-//    }
+    const_iterator cbegin() const
+    {
+        return const_iterator(data, 0, nRows, nCols);
+    }
 
-//    const_iterator cend()
-//    {
-//        return const_iterator();
-//    }
+    const_iterator cend() const
+    {
+        return const_iterator();
+    }
 
     bool empty() { return nCols == 0 && nRows == 0; }
 
@@ -218,6 +350,14 @@ public:
     void deleteCol(size_t pos) throw(std::out_of_range());
 
 private:
+    void detach()
+    {
+        if (copied)
+        {
+            data = new Matrix<T>(*this);
+            copied = false;
+        }
+    }
 //    void detach()
 //    {
 //        T* tmp = *data;
@@ -227,18 +367,18 @@ private:
 //        }
 //    }
 
-
     size_t nRows, nCols;
 
+    bool copied;
     T *data;
 };
 
 template<typename T, int width = 8>
-std::ostream& operator<<(std::ostream& stream, Matrix<T>& m)
+std::ostream& operator<<(std::ostream& stream, const Matrix<T>& m)
 {
-    for (Matrix<int>::iterator xs = m.begin(); xs != m.end(); ++xs)
+    for (Matrix<int>::const_iterator xs = m.cbegin(); xs != m.cend(); ++xs)
     {
-        for (Matrix<int>::iterator::innerIterator x = xs.begin();
+        for (Matrix<int>::const_iterator::const_innerIterator x = xs.begin();
              x != xs.end(); ++x)
             stream << std::setw(8) << std::to_string(*x);
         stream << std::endl;
