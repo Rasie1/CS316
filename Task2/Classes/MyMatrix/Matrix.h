@@ -301,7 +301,7 @@ public:
 
     Matrix(const Matrix&);
     Matrix(Matrix&&);
-    Matrix& operator=(const Matrix&);
+    Matrix& operator=(const Matrix&) = default;
     Matrix& operator=(Matrix&&) &;
     virtual ~Matrix();
 
@@ -356,7 +356,7 @@ public:
         swap(first.data, second.data);
         swap(first.nCols, second.nCols);
         swap(first.nRows, second.nRows);
-        swap(first.copis, second.copied);
+        swap(first.copied, second.copied);
     }
 
 
@@ -364,8 +364,8 @@ private:
     void detach();
     size_t nRows, nCols;
 
-    bool copied;
     T *data;
+    bool copied;
 };
 
 template<typename T, int width = 8>

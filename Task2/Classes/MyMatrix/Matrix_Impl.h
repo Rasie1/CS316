@@ -166,9 +166,9 @@ Matrix<T, A>::~Matrix()
 
 template<typename T, class A>
 Matrix<T, A>::Matrix(const Matrix& other) :
-    data(other.data),
     nRows(other.nRows),
     nCols(other.nCols),
+    data(other.data),
     copied(true)
 {
 
@@ -176,20 +176,12 @@ Matrix<T, A>::Matrix(const Matrix& other) :
 
 template<typename T, class A>
 Matrix<T, A>::Matrix(Matrix&& other) :
-    data(other.data),
     nRows(other.nRows),
     nCols(other.nCols),
+    data(other.data),
     copied(true)
 {
 
-}
-
-template<typename T, class A>
-Matrix<T, A>& Matrix<T, A>::operator=(const Matrix& other)
-{
-    swap(*this, other);
-
-    return *this;
 }
 
 template<typename T, class A>
@@ -210,5 +202,4 @@ void Matrix<T, A>::detach()
         data = newdata;
         copied = false;
     }
-
 }
