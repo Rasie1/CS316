@@ -65,9 +65,11 @@ void Matrix<T, A>::resize(size_t rows, size_t cols, const T& value)
     for (size_t x = 0; x < std::min(nCols, cols); ++x)
         newData[indexFromCoordinates(x, y, rows, cols)] = operator()(x, y);
 
-    delete[] data;
+//    delete[] data;
 
-    this->data = newData;
+    data.reset(newData);
+
+//    this->data = newData;
     this->nRows = rows;
     this->nCols = cols;
 }
@@ -160,7 +162,6 @@ void Matrix<T, A>::deleteCol(size_t pos) throw(std::out_of_range())
 template<typename T, class A>
 Matrix<T, A>::~Matrix()
 {
-    delete[] data;
 }
 
 
@@ -195,11 +196,16 @@ Matrix<T, A>& Matrix<T, A>::operator=(Matrix&& other) &
 template<typename T, class A>
 void Matrix<T, A>::detach()
 {
-    if (copied)
+    auto tmp = this->data;
+    if (!(tmp.empty() || data.unique()))
     {
-        auto newdata = new T[nRows * nCols];
-        std::copy(data, data + nRows*nCols, newdata);
-        data = newdata;
-        copied = false;
+        data = SharedMatrixPointer<T>(new T(*tmp));
     }
+//    if (copied)
+//    {
+//        auto newdata = new T[nRows * nCols];
+//        std::copy(data, data + nRows * nCols, newdata);
+//        data = newdata;
+//        copied = false;
+//    }
 }

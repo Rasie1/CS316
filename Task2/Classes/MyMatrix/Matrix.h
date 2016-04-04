@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <iomanip>
+#include "SharedPointer.h"
 
 template<typename T, class A = std::allocator<T>>
 class Matrix
@@ -290,7 +291,7 @@ public:
             return const_innerIterator();
         }
 
-        const T* p;
+        T* p;
         int position;
         int endPosition;
         int rowSize;
@@ -311,7 +312,7 @@ public:
     iterator begin()
     {
         detach();
-        return iterator(data, 0, nRows, nCols);
+        return iterator(data.rawPtr(), 0, nRows, nCols);
     }
 
     iterator end()
@@ -322,7 +323,7 @@ public:
 
     const_iterator cbegin() const
     {
-        return const_iterator(data, 0, nRows, nCols);
+        return const_iterator(data.rawPtr(), 0, nRows, nCols);
     }
 
     const_iterator cend() const
@@ -364,7 +365,7 @@ private:
     void detach();
     size_t nRows, nCols;
 
-    T *data;
+    SharedMatrixPointer<T> data;
     bool copied;
     bool givenAwayRef;
 };
