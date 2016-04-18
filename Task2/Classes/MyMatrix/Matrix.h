@@ -357,7 +357,7 @@ public:
         swap(first.data, second.data);
         swap(first.nCols, second.nCols);
         swap(first.nRows, second.nRows);
-        swap(first.copied, second.copied);
+//        swap(first.copied, second.copied);
     }
 
 
@@ -366,7 +366,7 @@ private:
     size_t nRows, nCols;
 
     SharedMatrixPointer<T> data;
-    bool copied;
+//    bool copied;
     bool givenAwayRef;
 };
 

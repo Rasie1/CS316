@@ -31,6 +31,7 @@ int main()
 
     cout << "Copying to B" << endl;
     auto b = a;
+    cout << b << endl;
 //    Matrix<int> b(4, 4)
     b(1, 1) = -100;
     cout << "B (changed (1,1) to -100):" << endl;;
@@ -64,6 +65,8 @@ int main()
     auto c = a;
     cout << "Changing A(1,1) to -3" << endl;
     a(1,1) = -3;
+    cout << "A:" << endl;
+    cout << a << endl;
     cout << "C:" << endl;
     cout << c << endl;
 

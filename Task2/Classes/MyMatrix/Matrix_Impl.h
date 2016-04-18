@@ -3,8 +3,7 @@
 template<typename T, class A>
 Matrix<T, A>::Matrix(size_t rows, size_t cols) :
         nRows(rows),
-        nCols(cols),
-        copied(false)
+        nCols(cols)
 {
     data = new T[rows * cols];
 }
@@ -169,8 +168,7 @@ template<typename T, class A>
 Matrix<T, A>::Matrix(const Matrix& other) :
     nRows(other.nRows),
     nCols(other.nCols),
-    data(other.data),
-    copied(true)
+    data(other.data)
 {
 
 }
@@ -179,8 +177,7 @@ template<typename T, class A>
 Matrix<T, A>::Matrix(Matrix&& other) :
     nRows(other.nRows),
     nCols(other.nCols),
-    data(other.data),
-    copied(true)
+    data(other.data)
 {
 
 }
@@ -196,16 +193,11 @@ Matrix<T, A>& Matrix<T, A>::operator=(Matrix&& other) &
 template<typename T, class A>
 void Matrix<T, A>::detach()
 {
-    auto tmp = this->data;
-    if (!(tmp.empty() || data.unique()))
+    auto tmp = this->data.rawPtr();
+    if (!(tmp == nullptr || data.unique()))
     {
-        data = SharedMatrixPointer<T>(new T(*tmp));
+        auto newdata = new T[nRows * nCols];
+        std::copy(tmp, tmp + nRows * nCols, newdata);
+        data.reset(newdata);
     }
-//    if (copied)
-//    {
-//        auto newdata = new T[nRows * nCols];
-//        std::copy(data, data + nRows * nCols, newdata);
-//        data = newdata;
-//        copied = false;
-//    }
 }

@@ -4,12 +4,12 @@ class SharedMatrixPointer
 public:
     SharedMatrixPointer() :
         data(nullptr),
-        counter(0)
+        counter(new int(0))
     {}
 
     SharedMatrixPointer(T* data) :
         data(data),
-        counter(1)
+        counter(new int(1))
     {}
 
     ~SharedMatrixPointer()
@@ -19,12 +19,12 @@ public:
 
     SharedMatrixPointer(const SharedMatrixPointer<T>& other) :
         data(other.data),
-        counter(other.useCount() + 1)
+        counter(other.counter)
     {
-
+        *counter += 1;
     }
 
-    int useCount() const { return counter; }
+    int useCount() const { return *counter; }
 
     bool unique() const { return useCount() == 1; }
     bool empty() const { return data == nullptr; }
@@ -32,6 +32,7 @@ public:
     {
         destroy();
         this->data = data;
+        *counter = 1;
     }
 
     T* rawPtr() const { return data; }
@@ -43,14 +44,25 @@ public:
         return data[i];
     }
 
+    friend void swap(SharedMatrixPointer<T>& first, SharedMatrixPointer<T>& second)
+    {
+        using std::swap;
+
+        swap(first.data, second.data);
+        swap(first.counter, second.counter);
+    }
+
 private:
     void destroy()
     {
-        counter--;
+        *counter -= 1;
         if (useCount() == 0)
+        {
             delete[] data;
+            delete counter;
+        }
     }
 
     T* data;
-    int counter;
+    int* counter;
 };
