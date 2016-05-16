@@ -62,6 +62,13 @@ int main()
     cout << "C:" << endl;
     cout << c << endl;
 
+
+    cout << "Exception safety tests" << endl;
+
+
+
+
+
     cout << endl << "All tests done" << endl;
 
     return 0;
