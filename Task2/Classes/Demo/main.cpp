@@ -21,20 +21,12 @@ int main()
     cout << "A:" << endl;
     cout << a << endl;
 
-//    cout << "Getting a row:" << endl;
-//    a.resize(6, 6, 1000);
-//    cout << a << endl;
-
-//    cout << "Getting a column:" << endl;
-//    a.resize(6, 6, 1000);
-//    cout << a << endl;
-
     cout << "Copying to B" << endl;
     auto b = a;
     cout << b << endl;
 //    Matrix<int> b(4, 4)
     b(1, 1) = -100;
-    cout << "B (changed (1,1) to -100):" << endl;;
+    cout << "B (changed (1,1) to -100):" << endl;
     cout << b << endl;
 
     cout << "Inserting a row and a column" << endl;

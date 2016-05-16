@@ -2,7 +2,63 @@
 #include <stdexcept>
 #include <iostream>
 #include <iomanip>
+#include <memory>
 #include "SharedPointer.h"
+
+template <class T>
+class CowPtr
+{
+    public:
+        typedef SharedPointer<T> RefPtr;
+
+    private:
+        RefPtr m_sp;
+
+        void detach()
+        {
+            T* tmp = m_sp.get();
+            if( !( tmp == 0 || m_sp.unique() ) ) {
+                m_sp = RefPtr( new T( *tmp ) );
+            }
+        }
+
+    public:
+        CowPtr(T* t)
+            :   m_sp(t)
+        {}
+        CowPtr(const RefPtr& refptr)
+            :   m_sp(refptr)
+        {}
+        const T& operator*() const
+        {
+            return *m_sp;
+        }
+        T& operator*()
+        {
+            detach();
+            return *m_sp;
+        }
+        const T* operator->() const
+        {
+            return m_sp.operator->();
+        }
+        T* operator->()
+        {
+            detach();
+            return m_sp.operator->();
+        }
+};
+
+
+
+
+
+
+
+
+
+
+
 
 template<typename T, class A = std::allocator<T>>
 class Matrix
@@ -323,7 +379,7 @@ public:
 
     const_iterator cbegin() const
     {
-        return const_iterator(data.rawPtr(), 0, nRows, nCols);
+        return const_iterator(data.get(), 0, nRows, nCols);
     }
 
     const_iterator cend() const
@@ -365,7 +421,7 @@ private:
     void detach();
     size_t nRows, nCols;
 
-    SharedMatrixPointer<T> data;
+    SharedPointer<T> data;
 //    bool copied;
     bool givenAwayRef;
 };

@@ -3,9 +3,9 @@
 template<typename T, class A>
 Matrix<T, A>::Matrix(size_t rows, size_t cols) :
         nRows(rows),
-        nCols(cols)
+        nCols(cols),
+        data(new T[rows * cols])
 {
-    data = new T[rows * cols];
 }
 
 template<typename T, class A>
@@ -31,7 +31,6 @@ static inline size_t indexFromCoordinates(size_t x,
                                           size_t rows,
                                           size_t cols) throw(std::out_of_range())
 {
-
     if (x < cols && y < rows)
         return y * cols + x;
     else
@@ -48,7 +47,7 @@ template<typename T, class A>
 T& Matrix<T, A>::operator()(size_t x, size_t y) throw(std::out_of_range())
 {
     detach();
-    return data[indexFromCoordinates(x,y, rows(), cols())];
+    return *(data.get() + indexFromCoordinates(x,y, rows(), cols()));
 }
 
 template<typename T, class A>
@@ -64,11 +63,7 @@ void Matrix<T, A>::resize(size_t rows, size_t cols, const T& value)
     for (size_t x = 0; x < std::min(nCols, cols); ++x)
         newData[indexFromCoordinates(x, y, rows, cols)] = operator()(x, y);
 
-//    delete[] data;
-
-    data.reset(newData);
-
-//    this->data = newData;
+    data = SharedPointer<T>(newData);
     this->nRows = rows;
     this->nCols = cols;
 }
@@ -193,11 +188,11 @@ Matrix<T, A>& Matrix<T, A>::operator=(Matrix&& other) &
 template<typename T, class A>
 void Matrix<T, A>::detach()
 {
-    auto tmp = this->data.rawPtr();
+    auto tmp = this->data.get();
     if (!(tmp == nullptr || data.unique()))
     {
         auto newdata = new T[nRows * nCols];
         std::copy(tmp, tmp + nRows * nCols, newdata);
-        data.reset(newdata);
+        data = SharedPointer<T>(newdata);
     }
 }

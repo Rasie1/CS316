@@ -1,68 +1,94 @@
-template<typename T>
-class SharedMatrixPointer
+class ReferenceCounter
 {
-public:
-    SharedMatrixPointer() :
-        data(nullptr),
-        counter(new int(0))
-    {}
-
-    SharedMatrixPointer(T* data) :
-        data(data),
-        counter(new int(1))
-    {}
-
-    ~SharedMatrixPointer()
-    {
-        destroy();
-    }
-
-    SharedMatrixPointer(const SharedMatrixPointer<T>& other) :
-        data(other.data),
-        counter(other.counter)
-    {
-        *counter += 1;
-    }
-
-    int useCount() const { return *counter; }
-
-    bool unique() const { return useCount() == 1; }
-    bool empty() const { return data == nullptr; }
-    void reset(T* data)
-    {
-        destroy();
-        this->data = data;
-        *counter = 1;
-    }
-
-    T* rawPtr() const { return data; }
-
-    T operator*() { return *data; }
-
-    T& operator[](int i)
-    {
-        return data[i];
-    }
-
-    friend void swap(SharedMatrixPointer<T>& first, SharedMatrixPointer<T>& second)
-    {
-        using std::swap;
-
-        swap(first.data, second.data);
-        swap(first.counter, second.counter);
-    }
-
 private:
-    void destroy()
+    int counter;
+
+public:
+    void add()
     {
-        *counter -= 1;
-        if (useCount() == 0)
+        counter++;
+    }
+
+    int release()
+    {
+        return --counter;
+    }
+
+    bool unique()
+    {
+        return counter == 1;
+    }
+};
+
+template<typename T>
+class SharedPointer
+{
+private:
+    T* data;
+    ReferenceCounter* reference;
+
+public:
+    SharedPointer() :
+        data(0),
+        reference(0)
+    {
+        reference = new ReferenceCounter();
+        reference->add();
+    }
+
+    SharedPointer(T* pValue) :
+        data(pValue),
+        reference(0)
+    {
+        reference = new ReferenceCounter();
+        reference->add();
+    }
+
+    SharedPointer(const SharedPointer<T>& sp) :
+        data(sp.data),
+        reference(sp.reference)
+    {
+        reference->add();
+    }
+
+    ~SharedPointer()
+    {
+        if (reference->release() == 0)
         {
-            delete[] data;
-            delete counter;
+            delete data;
+            delete reference;
         }
     }
 
-    T* data;
-    int* counter;
+    T& operator* ()
+    {
+        return *data;
+    }
+
+    T* operator-> ()
+    {
+        return data;
+    }
+
+    SharedPointer<T>& operator = (const SharedPointer<T>& sp)
+    {
+        if (this != &sp)
+        {
+            if(reference->release() == 0)
+            {
+                delete data;
+                delete reference;
+            }
+
+            data = sp.data;
+            reference = sp.reference;
+            reference->add();
+        }
+        return *this;
+    }
+
+    T* get() const { return data; }
+
+    bool unique() const { return reference->unique() == 1; }
+
 };
