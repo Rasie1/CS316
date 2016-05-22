@@ -29,7 +29,7 @@ size_t Matrix<T, A>::cols() const
 static inline size_t indexFromCoordinates(size_t x,
                                           size_t y,
                                           size_t rows,
-                                          size_t cols) throw(std::out_of_range())
+                                          size_t cols)
 {
     if (x < cols && y < rows)
         return y * cols + x;
@@ -38,13 +38,13 @@ static inline size_t indexFromCoordinates(size_t x,
 }
 
 template<typename T, class A>
-T Matrix<T, A>::operator()(size_t x, size_t y) const throw(std::out_of_range())
+T Matrix<T, A>::operator()(size_t x, size_t y) const
 {
     return data[indexFromCoordinates(x,y, rows(), cols())];
 }
 
 template<typename T, class A>
-T& Matrix<T, A>::operator()(size_t x, size_t y) throw(std::out_of_range())
+T& Matrix<T, A>::operator()(size_t x, size_t y)
 {
     detach();
     return *(data.get() + indexFromCoordinates(x,y, rows(), cols()));
@@ -69,7 +69,7 @@ void Matrix<T, A>::resize(size_t rows, size_t cols, const T& value)
 }
 
 template<typename T, class A>
-void Matrix<T, A>::insertCol(size_t pos, const T& value) throw(std::out_of_range())
+void Matrix<T, A>::insertCol(size_t pos, const T& value)
 {
     detach();
     if (pos > cols())
@@ -87,7 +87,7 @@ void Matrix<T, A>::insertCol(size_t pos, const T& value) throw(std::out_of_range
 }
 
 template<typename T, class A>
-void Matrix<T, A>::insertRow(size_t pos, const T& value) throw(std::out_of_range())
+void Matrix<T, A>::insertRow(size_t pos, const T& value)
 {
     detach();
     if (pos > rows())
@@ -106,7 +106,7 @@ void Matrix<T, A>::insertRow(size_t pos, const T& value) throw(std::out_of_range
 
 template<typename T, class A>
 template<typename ForwardIt>
-void Matrix<T, A>::insertCol(size_t pos, ForwardIt begin, ForwardIt end) throw(std::out_of_range())
+void Matrix<T, A>::insertCol(size_t pos, ForwardIt begin, ForwardIt end)
 {
     detach();
 
@@ -114,14 +114,14 @@ void Matrix<T, A>::insertCol(size_t pos, ForwardIt begin, ForwardIt end) throw(s
 
 template<typename T, class A>
 template<typename ForwardIt>
-void Matrix<T, A>::insertRow(size_t pos, ForwardIt begin, ForwardIt end) throw(std::out_of_range())
+void Matrix<T, A>::insertRow(size_t pos, ForwardIt begin, ForwardIt end)
 {
     detach();
 }
 
 
 template<typename T, class A>
-void Matrix<T, A>::deleteRow(size_t pos) throw(std::out_of_range())
+void Matrix<T, A>::deleteRow(size_t pos)
 {
     detach();
     if (pos >= rows())
@@ -138,7 +138,7 @@ void Matrix<T, A>::deleteRow(size_t pos) throw(std::out_of_range())
 
 
 template<typename T, class A>
-void Matrix<T, A>::deleteCol(size_t pos) throw(std::out_of_range())
+void Matrix<T, A>::deleteCol(size_t pos)
 {
     detach();
     if (pos >= cols())

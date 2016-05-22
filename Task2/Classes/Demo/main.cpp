@@ -3,6 +3,38 @@
 
 using namespace std;
 
+// Example Type for testing exception safety
+struct MyType
+{
+    static bool shouldThrowInConstructor;
+    int value;
+
+    void generateException()
+    {
+        throw std::logic_error("Example exception");
+    }
+
+    MyType()
+    {
+        value = rand() % 10;
+        if (shouldThrowInConstructor)
+            generateException();
+    }
+
+    MyType& operator=(const MyType& other)
+    {
+        generateException();
+        return *this;
+    }
+};
+
+bool MyType::shouldThrowInConstructor = false;
+
+std::ostream& operator<<(std::ostream& stream, const MyType& x)
+{
+    return stream << x.value;
+}
+
 int main()
 {
     cout << "Welcome" << endl;
@@ -63,9 +95,50 @@ int main()
     cout << c << endl;
 
 
+
+
+
     cout << "Exception safety tests" << endl;
 
+    auto m1 = Matrix<MyType>(4, 4);
+    auto m2 = m1;
 
+    cout << "M1:" << endl << m1
+         << "M2:" << endl << m2 << endl;
+
+    try
+    {
+        m1(1,1) = MyType();
+    }
+    catch (const std::logic_error& e)
+    {
+        cout << "Caught exception" << endl;
+    }
+    catch (...)
+    {
+        cout << "Caught  ..." << endl;
+    }
+
+
+    cout << "M1:" << endl << m1
+         << "M2:" << endl << m2 << endl;
+
+    MyType::shouldThrowInConstructor = true;
+    try
+    {
+        m1.resize(5, 5);
+        cout << "Printed?" << endl;
+    }
+    catch (const std::logic_error& e)
+    {
+        cout << "Caught exception" << endl;
+    }
+    catch (...)
+    {
+        cout << "Caught  ..." << endl;
+    }
+
+    cout << "M1:" << endl << m1 << endl;
 
 
 

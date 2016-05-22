@@ -307,8 +307,8 @@ public:
     Matrix& operator=(Matrix&&) &;
     virtual ~Matrix();
 
-    T  operator()(size_t x, size_t y) const throw(std::out_of_range());
-    T& operator()(size_t x, size_t y)       throw(std::out_of_range());
+    T  operator()(size_t x, size_t y) const ;
+    T& operator()(size_t x, size_t y)       ;
 
     iterator begin()
     {
@@ -341,15 +341,15 @@ public:
     void resize(size_t rows, size_t cols, const T& value = T());
 
     template<typename ForwardIt>
-    void insertCol(size_t pos, ForwardIt begin, ForwardIt end) throw(std::out_of_range());
+    void insertCol(size_t pos, ForwardIt begin, ForwardIt end) ;
     template<typename ForwardIt>
-    void insertRow(size_t pos, ForwardIt begin, ForwardIt end) throw(std::out_of_range());
+    void insertRow(size_t pos, ForwardIt begin, ForwardIt end) ;
 
-    void insertCol(size_t pos, const T& value = T()) throw(std::out_of_range());
-    void insertRow(size_t pos, const T& value = T()) throw(std::out_of_range());
+    void insertCol(size_t pos, const T& value = T()) ;
+    void insertRow(size_t pos, const T& value = T()) ;
 
-    void deleteRow(size_t pos) throw(std::out_of_range());
-    void deleteCol(size_t pos) throw(std::out_of_range());
+    void deleteRow(size_t pos) ;
+    void deleteCol(size_t pos) ;
 
     friend void swap(Matrix<T, A>& first, Matrix<T, A>& second)
     {
@@ -374,11 +374,11 @@ private:
 template<typename T, int width = 8>
 std::ostream& operator<<(std::ostream& stream, const Matrix<T>& m)
 {
-    for (Matrix<int>::const_iterator xs = m.cbegin(); xs != m.cend(); ++xs)
+    for (typename Matrix<T>::const_iterator xs = m.cbegin(); xs != m.cend(); ++xs)
     {
-        for (Matrix<int>::const_iterator::const_innerIterator x = xs.begin();
+        for (typename Matrix<T>::const_iterator::const_innerIterator x = xs.begin();
              x != xs.end(); ++x)
-            stream << std::setw(8) << std::to_string(*x);
+            stream << std::setw(8) << *x;
         stream << std::endl;
     }
 
