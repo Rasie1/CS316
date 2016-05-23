@@ -1,13 +1,14 @@
 #pragma once
 #include <vector>
+#include <iosfwd>
+#include <iomanip>
 
 class World
 {
-    using std::vector;
-
     int width, height;
     double population;
-    vector<vector<bool>> isAlive;
+    std::vector<std::vector<bool>> curr;
+    std::vector<std::vector<bool>> next;
 
     void updateCell(int x, int y);
 public:
@@ -15,9 +16,22 @@ public:
         width(w),
         height(h),
         population(population),
-        isAlive(height, vector<bool>(width))
+        curr(height, std::vector<bool>(width)),
+        next(height, std::vector<bool>(width))
     {
     }
 
-    World nextStep();
-}
+    void step();
+
+    std::ostream& operator<<(std::ostream& stream)
+    {
+        for (auto xs : curr)
+        {
+            for (auto x : xs)
+                stream << x << " ";
+            stream << std::endl;
+        }
+
+        return stream;
+    }
+};

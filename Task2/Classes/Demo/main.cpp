@@ -7,6 +7,7 @@ using namespace std;
 struct MyType
 {
     static bool shouldThrowInConstructor;
+    static bool shouldThrowInAssignment;
     int value;
 
     void generateException()
@@ -23,12 +24,14 @@ struct MyType
 
     MyType& operator=(const MyType& other)
     {
-        generateException();
+        if (shouldThrowInAssignment)
+            generateException();
         return *this;
     }
 };
 
 bool MyType::shouldThrowInConstructor = false;
+bool MyType::shouldThrowInAssignment  = false;
 
 std::ostream& operator<<(std::ostream& stream, const MyType& x)
 {
@@ -100,6 +103,9 @@ int main()
 
     cout << "Exception safety tests" << endl;
 
+    MyType::shouldThrowInConstructor = false;
+    MyType::shouldThrowInAssignment  = true;
+
     auto m1 = Matrix<MyType>(4, 4);
     auto m2 = m1;
 
@@ -112,7 +118,7 @@ int main()
     }
     catch (const std::logic_error& e)
     {
-        cout << "Caught exception" << endl;
+        cout << "Caught exception" << e.what() << endl;
     }
     catch (...)
     {
@@ -123,7 +129,9 @@ int main()
     cout << "M1:" << endl << m1
          << "M2:" << endl << m2 << endl;
 
+
     MyType::shouldThrowInConstructor = true;
+    MyType::shouldThrowInAssignment  = false;
     try
     {
         m1.resize(5, 5);
@@ -131,7 +139,7 @@ int main()
     }
     catch (const std::logic_error& e)
     {
-        cout << "Caught exception" << endl;
+        cout << "Caught exception: " << e.what() << endl;
     }
     catch (...)
     {
