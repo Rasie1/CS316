@@ -15,11 +15,10 @@ class World
 
     void updateCell(int x, int y);
     void threadJob(int iterations, int partNumber, int parts, boost::barrier& cur_barier);
-public:
-    World(int w, int h, double population);
-
     void step();
     void step(int x0, int y0, int x1, int y1);
+public:
+    World(int w, int h, double population);
 
     void runSingleThreaded(int iterations, int delay);
     void runMultiThreaded(int iterations, int threadsNum);
