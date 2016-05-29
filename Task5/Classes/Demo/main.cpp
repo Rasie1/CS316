@@ -2,40 +2,7 @@
 #include <chrono>
 #include <thread>
 #include <iomanip>
-#include <boost/mpl/for_each.hpp>
-#include <boost/mpl/print.hpp>
-#include <boost/mpl/reverse.hpp>
 #include "Types.h"
-
-using namespace std;
-
-template <typename What, typename From>
-struct IsDerived : mpl::and_<
-        std::is_base_of<From, What>,
-        mpl::not_<std::is_same<From, What>>
-> {};
-
-template <typename Base, typename Begin, typename End>
-struct AllAreDerived
-{
-    typedef typename mpl::deref<Begin>::type
-    Current;
-    typedef typename mpl::next<Begin>::type
-    Next;
-
-    typedef typename mpl::if_<IsDerived<Current, Base>,
-                              typename AllAreDerived<Base, Next, End>::type,
-                              mpl::false_
-                             >::type
-    type;
-};
-
-template <typename Base, typename End>
-struct AllAreDerived<Base, End, End>
-{
-    typedef typename mpl::true_ type;
-};
-
 
 int main()
 {
@@ -52,20 +19,57 @@ int main()
     };
 
     typedef mpl::vector<MyDerived1, MyDerived2, MyDerived1, MyBase>
-    inputTypes;
+    inputTypesTrue;
+    typedef mpl::reverse<inputTypesTrue>::type
+    inputTypesTrueReversed;
 
-    typedef mpl::reverse<inputTypes>::type
-    inputTypesReversed;
-
-    typedef AllAreDerived<
-            mpl::deref<mpl::begin<inputTypesReversed>::type>::type,
-            mpl::next <mpl::begin<inputTypesReversed>::type>::type,
-            mpl::end<inputTypesReversed>::type>::type
-    CheckIfAllDeriveFromFirst;
+    typedef mpl::vector<MyDerived1, MyDerived2, int, MyBase>
+    inputTypesFalse;
+    typedef mpl::reverse<inputTypesFalse>::type
+    inputTypesFalseReversed;
 
 
-    std::cout << "Все классы - произвольные от последнего: "
-              << CheckIfAllDeriveFromFirst::value << std::endl;
+    {
+        typedef AllAreDerived<
+                mpl::deref<mpl::begin<inputTypesTrueReversed>::type>::type,
+                mpl::next <mpl::begin<inputTypesTrueReversed>::type>::type,
+                mpl::end<inputTypesTrueReversed>::type>::type
+        CheckIfAllDeriveFromFirst;
+
+        typedef AllAreClasses<
+                mpl::deref<mpl::begin<inputTypesTrueReversed>::type>::type,
+                mpl::next <mpl::begin<inputTypesTrueReversed>::type>::type,
+                mpl::end<inputTypesTrueReversed>::type>::type
+        CheckIfAllAreClasses;
+
+        std::cout << "Последовательность: "
+                  << typeid(inputTypesTrue).name()
+                  << "Все типы - классы: "
+                  << CheckIfAllAreClasses::value << std::endl
+                  << "Все классы - произвольные от последнего: "
+                  << CheckIfAllDeriveFromFirst::value << std::endl;
+    }
+    {
+
+        typedef AllAreDerived<
+                mpl::deref<mpl::begin<inputTypesFalseReversed>::type>::type,
+                mpl::next <mpl::begin<inputTypesFalseReversed>::type>::type,
+                mpl::end<inputTypesFalseReversed>::type>::type
+        CheckIfAllDeriveFromFirst;
+
+        typedef AllAreClasses<
+                mpl::deref<mpl::begin<inputTypesFalseReversed>::type>::type,
+                mpl::next <mpl::begin<inputTypesFalseReversed>::type>::type,
+                mpl::end<inputTypesFalseReversed>::type>::type
+        CheckIfAllAreClasses;
+
+        std::cout << "Последовательность: "
+                  << typeid(inputTypesFalse).name()
+                  << "Все типы - классы: "
+                  << CheckIfAllAreClasses::value << std::endl
+                  << "Все классы - произвольные от последнего: "
+                  << CheckIfAllDeriveFromFirst::value << std::endl;
+    }
 
     return 0;
 }
