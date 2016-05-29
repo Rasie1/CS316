@@ -20,25 +20,23 @@ void World::updateCell(int y, int x)
 {
     int neighbors = 0;
 
-    for (int i = max(0, y - 1); i < min(height - 1, y + 1); ++i)
-    for (int j = max(0, x - 1); j < min(width  - 1, x + 1); ++j)
-        neighbors += (curr[i][j] && (i != y) && (j != x)) ? 1
-                                                          : 0;
+    for (int i = max(0, y - 1); i <= min(height - 1, y + 1); ++i)
+    for (int j = max(0, x - 1); j <= min(width  - 1, x + 1); ++j)
+    {
+        if (curr[i][j] && !((i == y) && (j == x)))
+            neighbors++;
+    }
     const int survivalPoints = 2;
     const int birthPoints = 3;
     const int overpopulationPoints = 4;
 
     if (curr[y][x])
     {
-        if (neighbors >= overpopulationPoints || survivalPoints > neighbors)
-            next[y][x] = false;
-        else
-            next[y][x] = true;
+        next[y][x] = (neighbors < overpopulationPoints && neighbors >= survivalPoints) && curr[y][x];
     }
     else
     {
-        if (neighbors == birthPoints)
-            next[y][x] = true;
+        next[y][x] = (neighbors == birthPoints);
     }
 }
 

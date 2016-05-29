@@ -13,13 +13,15 @@ int main()
 
     auto world = World(width, height, population);
 
-    auto iterations = 32;
-    auto delay = 500;
+    auto iterations = 10000;
+    auto delay = 60;
 
     cout << "Starting simulation with" << endl
          << "Width: " << width << endl
          << "Height: " << height << endl
          << "Population percentage: " << population << endl;
+
+    cout << world << endl;
 
     for (int i = 0; i < iterations; ++i)
     {
