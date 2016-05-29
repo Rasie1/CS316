@@ -1,6 +1,8 @@
 #include "World.h"
 #include <cmath>
-#include <ostream>
+#include <iostream>
+#include <chrono>
+#include <thread>
 
 using namespace std;
 
@@ -42,14 +44,18 @@ void World::updateCell(int y, int x)
 
 void World::step()
 {
-    for (int i = 0; i < height; ++i)
-    for (int j = 0; j < width; ++j)
+    step(0, 0, width, height);
+}
+
+void World::step(int x0, int y0, int x1, int y1)
+{
+    for (int i = y0; i < y1; ++i)
+    for (int j = x0; j < x1; ++j)
         updateCell(i, j);
 
-    for (int i = 0; i < height; ++i)
-    for (int j = 0; j < width; ++j)
+    for (int i = y0; i < y1; ++i)
+    for (int j = x0; j < x1; ++j)
         curr[i][j] = next[i][j];
-
 }
 
 static char visualizeCell(bool x)
@@ -68,3 +74,86 @@ std::ostream& operator<<(std::ostream& stream, const World& world)
 
     return stream;
 }
+
+void World::runSingleThreaded(int iterations, int delay)
+{
+    for (int i = 0; i < iterations; ++i)
+    {
+        step();
+        cout << *this << endl;
+        this_thread::sleep_for(std::chrono::milliseconds(delay));
+    }
+}
+
+boost::mutex io_mutex;
+
+void World::threadJob(int iterations, int partNumber, int parts, boost::barrier& cur_barier)
+{
+    int h = height / parts;
+    int x0 = 0;
+    int y0 = partNumber * h;
+    int x1 = width;
+    int y1 = partNumber * (h + 1);
+
+    for (int iteration = 0; iteration < iterations; iteration++)
+    {
+        for (int i = y0; i < y1; ++i)
+        for (int j = x0; j < x1; ++j)
+            updateCell(i, j);
+
+        {
+            cur_barier.wait();
+            boost::lock_guard<boost::mutex> locker(io_mutex);
+
+            for (int i = y0; i < y1; ++i)
+            for (int j = x0; j < x1; ++j)
+                curr[i][j] = next[i][j];
+        }
+        {
+            cur_barier.wait();
+            boost::lock_guard<boost::mutex> locker(io_mutex);
+
+            std::cout << "Iteration " << iteration << " on thread " << partNumber << endl
+                      << *this << endl;
+        }
+        {
+            cur_barier.wait();
+            boost::lock_guard<boost::mutex> locker(io_mutex);
+        }
+    }
+
+}
+
+void World::runMultiThreaded(int iterations, int threadsNum)
+{
+    boost::barrier bar(threadsNum);
+
+    auto threads = std::vector<boost::thread>();
+    for (int i = 0; i < threadsNum; ++i)
+    {
+        threads.push_back(boost::thread(boost::bind(&World::threadJob,
+                                                    this,
+                                                    iterations,
+                                                    i,
+                                                    threadsNum,
+                                                    boost::ref(bar)
+                                                    )));
+    }
+
+    for (int i = 0; i < threadsNum; ++i)
+        threads[i].join();
+}
+
+
+
+//void thread_fun(boost::barrier& cur_barier, boost::atomic<int>& current)
+//{
+//    ++current;
+//    cur_barier.wait();
+//    boost::lock_guard<boost::mutex> locker(io_mutex);
+//    std::cout << current << std::endl;
+//}
+
+//int main()
+//{
+//}

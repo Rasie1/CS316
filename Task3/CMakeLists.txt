@@ -7,6 +7,8 @@ file(GLOB INC_DEMO ./Classes/GameOfLife Classes/GameOfLife)
 file(GLOB SRC_LIFE . Classes/GameOfLife/*.cpp)
 file(GLOB INC_LIFE . Classes/GameOfLife)
 
+find_package(Boost COMPONENTS system filesystem thread REQUIRED)
+
 include_directories(${INC_LIFE})
 include_directories(${INC_DEMO})
 
@@ -14,3 +16,8 @@ add_library(GameOfLifeLib ${SRC_LIFE} Classes/GameOfLife/World.cpp)
 add_executable(GameOfLife ${SRC_DEMO} ${INC_DEMO})
 
 target_link_libraries(GameOfLife GameOfLifeLib)
+target_link_libraries(GameOfLife
+  ${Boost_FILESYSTEM_LIBRARY}
+  ${Boost_SYSTEM_LIBRARY}
+  ${Boost_THREAD_LIBRARY}
+)

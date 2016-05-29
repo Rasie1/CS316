@@ -12,7 +12,8 @@ int main()
 
     auto world = World(width, height, population);
 
-    auto iterations = 32;
+    auto iterations = 4;
+    auto delay = 60;
 
     cout << "Starting simulation with" << endl
          << "Width: " << width << endl
@@ -21,12 +22,7 @@ int main()
 
     cout << world << endl;
 
-//    auto delay = 60;
-//    world.runSingleThreaded(iterations, delay);
-
-    cout << "Running threads: " << endl;
-    int threads = 5;
-    world.runMultiThreaded(iterations, threads);
+    world.runSingleThreaded(iterations, delay);
 
     cout << "Simulation finished" << endl;
 
