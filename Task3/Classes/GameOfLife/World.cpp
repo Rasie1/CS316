@@ -126,6 +126,8 @@ void World::threadJob(int iterations, int partNumber, int parts, boost::barrier&
 
 void World::runMultiThreaded(int iterations, int threadsNum)
 {
+    if (threadsNum > height)
+        throw std::logic_error("Can't create more threads than rows!");
     boost::barrier bar(threadsNum);
 
     auto threads = std::vector<boost::thread>();

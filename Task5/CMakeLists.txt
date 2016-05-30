@@ -10,5 +10,10 @@ file(GLOB INC_TYPES . Classes/Types)
 include_directories(${INC_TYPES})
 include_directories(${INC_DEMO})
 
-add_executable(Types ${SRC_DEMO} ${INC_DEMO} ${INC_TYPES})
+
+add_library(TypesLib ${SRC_TYPES} Classes/Types/Dispatchers.cpp)
+add_executable(Types ${SRC_DEMO} ${INC_DEMO} ${INC_TYPES} ${SRC_TYPES})
+
+target_link_libraries(Types TypesLib)
+
 

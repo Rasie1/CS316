@@ -21,6 +21,8 @@
 #include <boost/mpl/placeholders.hpp>
 
 
+
+
 using boost::mpl::vector_c;
 using boost::mpl::vector;
 using boost::mpl::push_back;
@@ -61,12 +63,6 @@ struct AllAreDerived<Base, End, End>
     typedef typename mpl::true_ type;
 };
 
-
-//template <typename What, typename From>
-//struct IsClass : mpl::and_<
-//        std::is_class<What>,
-//        mpl::not_<std::is_same<From, What>>
-//> {};
 
 template <typename Base, typename Begin, typename End>
 struct AllAreClasses

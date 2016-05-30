@@ -30,23 +30,22 @@ int main()
     const int n = 5;
     cout << "Magic rect of " << n << endl;
 
-
     boost::mpl::for_each<MagicRect<n>::matrixValue>(printRow());
-    auto rect = magicRectDynamic(n);
+//    auto rect = magicRectDynamic(n);
 
-    cout << "Dynamic" << endl << endl;
-    for (auto xs : rect)
-    {
-        for (auto x  : xs)
-        {
-            cout << setw(4);
-            if (x == 0)
-                cout << "    ";
-            else
-                cout << x;
-        }
-        cout << endl;
-    }
+//    cout << "Dynamic" << endl << endl;
+//    for (auto xs : rect)
+//    {
+//        for (auto x  : xs)
+//        {
+//            cout << setw(4);
+//            if (x == 0)
+//                cout << "    ";
+//            else
+//                cout << x;
+//        }
+//        cout << endl;
+//    }
 
 
 

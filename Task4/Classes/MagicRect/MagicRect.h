@@ -34,7 +34,7 @@ struct MatrixRow
     typedef typename MatrixRow<i, j - 1, n>::rowValue
     prev;
 
-    static const int val = n * i + j;
+    static const int val = 1 + ((i - j + (n - 1) / 2) % n) * n + ((i + j + (n + 1) / 2) % n);
 
     typedef typename push_back<prev, int_<val>>::type
     rowValue;
@@ -117,59 +117,59 @@ struct MagicRect : MagicRectHelpers::Ret<n>
 
 };
 
-std::vector<std::vector<int>> magicRectDynamic(int n)
-{
-    using std::cout;
-    using std::endl;
-    using std::setw;
-    std::vector<std::vector<int>> a(n * 2, std::vector<int>(n * 2));
-    std::vector<std::vector<int>> b(n, std::vector<int>(n));
+//std::vector<std::vector<int>> magicRectDynamic(int n)
+//{
+//    using std::cout;
+//    using std::endl;
+//    using std::setw;
+//    std::vector<std::vector<int>> a(n * 2, std::vector<int>(n * 2));
+//    std::vector<std::vector<int>> b(n, std::vector<int>(n));
 
-    int acc = 1;
-    for (int i = 0; i < n; ++i)
-    {
-        for (int j = 0; j < n; ++j)
-        {
-            a[i - j + n][j + i] = acc;
-//            ret[(i + (n - j) + n/2) % n][(j + i + n/2 + 1) % n] = acc;
-            acc++;
-        }
-    }
+//    int acc = 1;
+//    for (int i = 0; i < n; ++i)
+//    {
+//        for (int j = 0; j < n; ++j)
+//        {
+//            a[i - j + n][j + i] = acc;
+////            ret[(i + (n - j) + n/2) % n][(j + i + n/2 + 1) % n] = acc;
+//            acc++;
+//        }
+//    }
 
 
-    cout << "Helper" << endl << endl;
-    for (auto xs : a)
-    {
-        for (auto x  : xs)
-        {
-            cout << setw(4);
-            if (x == 0)
-                cout << "    ";
-            else
-                cout << x;
-        }
-        cout << endl;
-    }
+//    cout << "Helper" << endl << endl;
+//    for (auto xs : a)
+//    {
+//        for (auto x  : xs)
+//        {
+//            cout << setw(4);
+//            if (x == 0)
+//                cout << "    ";
+//            else
+//                cout << x;
+//        }
+//        cout << endl;
+//    }
 
-    for (int i = 0; i < n; ++i)
-    {
-        for (int j = 0; j < n; ++j)
-        {
+//    for (int i = 0; i < n; ++i)
+//    {
+//        for (int j = 0; j < n; ++j)
+//        {
 
-            b[i][j] = a[n / 2 + 1 + i][n / 2 + j];
-            if (b[i][j] == 0)
-                b[i][j] = a[n /
-            if ((i + j) % 2)
-            {
+//            b[i][j] = a[n / 2 + 1 + i][n / 2 + j];
+//            if (b[i][j] == 0)
+//                b[i][j] = a[n /
+//            if ((i + j) % 2)
+//            {
 
-                //b[i][j] = a[(n + n / 2 - j) % n][(n + n / 2 + 1 + i) % n];
-            }
-            else
-            {
-                //b[i][j] = a[][(n + n / 2 + 1 + i) % n];
-            }
-        }
-    }
+//                //b[i][j] = a[(n + n / 2 - j) % n][(n + n / 2 + 1 + i) % n];
+//            }
+//            else
+//            {
+//                //b[i][j] = a[][(n + n / 2 + 1 + i) % n];
+//            }
+//        }
+//    }
 
-    return b;
-}
+//    return b;
+//}

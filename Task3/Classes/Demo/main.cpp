@@ -12,7 +12,7 @@ int main()
 
     auto world = World(width, height, population);
 
-    auto iterations = 32;
+    auto iterations = 10;
 
     cout << "Starting simulation with" << endl
          << "Width: " << width << endl

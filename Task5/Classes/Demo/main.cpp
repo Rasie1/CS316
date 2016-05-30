@@ -3,6 +3,7 @@
 #include <thread>
 #include <iomanip>
 #include "Types.h"
+#include "Dispatchers.h"
 
 int main()
 {
@@ -70,6 +71,22 @@ int main()
                   << "Все классы - произвольные от последнего: "
                   << CheckIfAllDeriveFromFirst::value << std::endl;
     }
+
+
+    std::cout << std::endl << std::endl
+              << "Dispatcher demo: " << std::endl;
+
+    Shape* r0 = new Rectangle;
+    Shape* r1 = new Rectangle;
+    Shape* r2 = new Rectangle;
+
+    Shape* c0 = new Circle;
+    Shape* c1 = new Circle;
+    Shape* c2 = new Circle;
+
+    SymmetricTripleLinearDispatcher::dispatch(r0, r1, c1);
+    SymmetricTripleLinearDispatcher::dispatch(c1, r1, r2);
+    SymmetricTripleLinearDispatcher::dispatch(c2, c1, c0);
 
     return 0;
 }
